@@ -1,5 +1,6 @@
 from django.shortcuts import render, reverse
 from django.views.generic.edit import FormView
+from django.views.generic import TemplateView
 
 from .forms import UserRegisterForm
 
@@ -21,6 +22,5 @@ def success_view(request):
     return render(request, template_name)
 
 
-def landing_page(request):
+class LandingPageView(TemplateView):
     template_name = 'notes/landing.html'
-    return render(request, template_name)
