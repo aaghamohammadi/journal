@@ -19,3 +19,8 @@ class RegisterView(FormView):
 def success_view(request):
     template_name = 'notes/success.html'
     return render(request, template_name)
+
+
+def landing_page(request):
+    template_name = 'notes/landing.html'
+    return render(request, template_name)

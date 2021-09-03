@@ -15,8 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from notes.views import landing_page
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', landing_page, name='landing-page'),
     path('notes/', include('notes.urls', namespace="notes"))
 ]
