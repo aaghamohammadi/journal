@@ -1,4 +1,6 @@
+from django.contrib.auth.views import LoginView
 from django.shortcuts import render, reverse
+from django.urls import reverse_lazy
 from django.views.generic.edit import FormView
 from django.views.generic import TemplateView
 
@@ -15,6 +17,13 @@ class RegisterView(FormView):
 
     def get_success_url(self):
         return reverse("notes:success")
+
+
+class UserLoginView(LoginView):
+    template_name = 'notes/login.html'
+
+    def get_success_url(self):
+        return reverse_lazy('landing-page')
 
 
 def success_view(request):
