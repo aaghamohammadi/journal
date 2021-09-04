@@ -7,13 +7,13 @@ from django.views.generic import TemplateView
 from .forms import UserRegisterForm
 
 
-class RegisterView(FormView):
+class UserRegisterView(FormView):
     template_name = 'notes/register.html'
     form_class = UserRegisterForm
 
     def form_valid(self, form):
         form.save()
-        return super(RegisterView, self).form_valid(form)
+        return super(UserRegisterView, self).form_valid(form)
 
     def get_success_url(self):
         return reverse("notes:success")
