@@ -16,7 +16,7 @@ class UserRegisterView(FormView):
         return super(UserRegisterView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse("notes:success")
+        return reverse_lazy("notes:success")
 
 
 class UserLoginView(LoginView):
