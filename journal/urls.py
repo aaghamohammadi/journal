@@ -18,7 +18,7 @@ from django.urls import path, include
 from notes.views import LandingPageView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', LandingPageView.as_view(), name='landing-page'),
-    path('notes/', include('notes.urls', namespace="notes"))
+    path("admin/", admin.site.urls),
+    path("", LandingPageView.as_view(), name="landing-page"),
+    path("notes/", include("notes.urls", namespace="notes")),
 ]

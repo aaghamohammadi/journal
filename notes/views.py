@@ -8,7 +8,7 @@ from .forms import UserRegisterForm
 
 
 class UserRegisterView(FormView):
-    template_name = 'notes/register.html'
+    template_name = "notes/register.html"
     form_class = UserRegisterForm
 
     def form_valid(self, form):
@@ -20,16 +20,16 @@ class UserRegisterView(FormView):
 
 
 class UserLoginView(LoginView):
-    template_name = 'notes/login.html'
+    template_name = "notes/login.html"
 
     def get_success_url(self):
-        return reverse_lazy('landing-page')
+        return reverse_lazy("landing-page")
 
 
 def success_view(request):
-    template_name = 'notes/success.html'
+    template_name = "notes/success.html"
     return render(request, template_name)
 
 
 class LandingPageView(TemplateView):
-    template_name = 'notes/landing.html'
+    template_name = "notes/landing.html"
