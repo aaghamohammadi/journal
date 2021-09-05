@@ -49,7 +49,7 @@ class UserRegisterViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, template_name)
 
-        user = User.objects.filter(username=data["username"]).first()
+        user = User.objects.get(username=data["username"])
 
         self.assertEqual(user.email, data["email"])
 
