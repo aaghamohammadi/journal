@@ -63,9 +63,3 @@ class SuccessViewTest(TestCase):
         response = self.client.get(reverse("notes:success"))
         template_name = "notes/success.html"
         self.assertTemplateUsed(response, template_name)
-
-
-class LoginViewTest(TestCase):
-    def test_status_code(self):
-        response = self.client.get(reverse("notes:login"))
-        self.assertEqual(response.status_code, 200)
