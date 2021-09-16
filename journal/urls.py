@@ -15,11 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin, auth
 from django.urls import path, include
-from notes.views import LandingPageView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", LandingPageView.as_view(), name="landing-page"),
     path("accounts/", include("django.contrib.auth.urls")),
     path("notes/", include("notes.urls", namespace="notes")),
 ]

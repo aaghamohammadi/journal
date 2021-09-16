@@ -1,11 +1,9 @@
 {% extends 'notes/base.html' %}
 {% block content %}
 <table>
-{% for item in items %}
     <tr>
         <td>{{ item.title }}</td>
-        <td><a href="{% url 'notes:item' item.id %}">View</a></td>
+        <td>{{ item.text }}</td>
     </tr>
-{% endfor %}
 </table>
 {% endblock content%}

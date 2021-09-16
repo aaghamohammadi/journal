@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -28,7 +28,17 @@ def success_view(request):
 class LandingPageView(LoginRequiredMixin, ListView):
     template_name = "notes/landing.html"
     redirect_field_name = ""
+    context_object_name = "items"
 
     def get_queryset(self):
         user = self.request.user
         return Item.objects.filter(user=user)
+
+
+class ItemPageView(LoginRequiredMixin, DetailView):
+    template_name = "notes/item.html"
+    redirect_field_name = ""
+    context_object_name = "item"
+
+    def get_queryset(self):
+        return Item.objects.filter(user=self.request.user)
