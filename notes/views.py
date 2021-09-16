@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView
+from django.views.generic import ListView
 from django.views.generic.edit import FormView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import UserRegisterForm
+from .models import Item
 
 
 class UserRegisterView(FormView):
@@ -23,5 +25,10 @@ def success_view(request):
     return render(request, template_name)
 
 
-class LandingPageView(TemplateView):
+class LandingPageView(LoginRequiredMixin, ListView):
     template_name = "notes/landing.html"
+    redirect_field_name = ""
+
+    def get_queryset(self):
+        user = self.request.user
+        return Item.objects.filter(user=user)
