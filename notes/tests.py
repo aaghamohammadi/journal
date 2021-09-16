@@ -10,12 +10,12 @@ User = get_user_model()
 
 class LandingPageViewTest(TestCase):
     def setUp(self) -> None:
-        self.user = User.objects.create_user(username="fred", password="secret")
+        self.user1 = User.objects.create_user(username="fred", password="secret")
         self.user2 = User.objects.create_user(username="john", password="smith")
         Item.objects.create(
             title="RF implementation",
             text="I have to implement RF and find its hyperparameters",
-            user=self.user,
+            user=self.user1,
         )
         Item.objects.create(
             title="LR implementation",
@@ -25,24 +25,54 @@ class LandingPageViewTest(TestCase):
 
     def test_status_code(self):
         self.client.login(username="fred", password="secret")
-        response = self.client.get(reverse("landing-page"))
+        response = self.client.get(reverse("notes:landing-page"))
         self.assertEqual(response.status_code, 200)
 
     def test_template_name(self):
         self.client.login(username="fred", password="secret")
-        response = self.client.get(reverse("landing-page"))
+        response = self.client.get(reverse("notes:landing-page"))
         template_name = "notes/landing.html"
         self.assertTemplateUsed(response, template_name)
 
     def test_get_list_of_notes_for_user(self):
         self.client.login(username="fred", password="secret")
-        response = self.client.get(reverse("landing-page"))
-        object_list = response.context["object_list"]
-        self.assertQuerysetEqual(object_list, self.user.item_set.all())
+        response = self.client.get(reverse("notes:landing-page"))
+        object_list = response.context["items"]
+        self.assertQuerysetEqual(object_list, self.user1.item_set.all())
 
     def test_anonymous_visit(self):
-        response = self.client.get(reverse("landing-page"))
+        response = self.client.get(reverse("notes:landing-page"))
         self.assertRedirects(response, reverse("login"))
+
+
+class ItemPageViewTest(TestCase):
+    def setUp(self) -> None:
+        self.user1 = User.objects.create_user(username="fred", password="secret")
+        self.user2 = User.objects.create_user(username="john", password="smith")
+        Item.objects.create(
+            title="RF implementation",
+            text="I have to implement RF and find its hyperparameters",
+            user=self.user1,
+        )
+        Item.objects.create(
+            title="LR implementation",
+            text="It is option to implement LR",
+            user=self.user2,
+        )
+
+    def test_anonymous_visit(self):
+        items = Item.objects.filter(user=self.user1)
+        item = items.first()
+        response = self.client.get(reverse("notes:item", kwargs={"pk": item.id}))
+        self.assertRedirects(response, reverse("login"))
+
+    def test_user_visit_item(self):
+        self.client.login(username="john", password="smith")
+        items = Item.objects.filter(user=self.user2)
+        item = items.first()
+        response = self.client.get(reverse("notes:item", kwargs={"pk": item.id}))
+        response_context = response.context["item"]
+        self.assertEqual(response_context, item)
 
 
 class UserRegisterViewTest(TestCase):
