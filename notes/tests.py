@@ -2,21 +2,47 @@ from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 from django.shortcuts import reverse
 from django.test import TestCase
-
+from .models import Item
 from .forms import UserRegisterForm
 
 User = get_user_model()
 
 
 class LandingPageViewTest(TestCase):
+    def setUp(self) -> None:
+        self.user = User.objects.create_user(username="fred", password="secret")
+        self.user2 = User.objects.create_user(username="john", password="smith")
+        Item.objects.create(
+            title="RF implementation",
+            text="I have to implement RF and find its hyperparameters",
+            user=self.user,
+        )
+        Item.objects.create(
+            title="LR implementation",
+            text="It is option to implement LR",
+            user=self.user2,
+        )
+
     def test_status_code(self):
+        self.client.login(username="fred", password="secret")
         response = self.client.get(reverse("landing-page"))
         self.assertEqual(response.status_code, 200)
 
     def test_template_name(self):
+        self.client.login(username="fred", password="secret")
         response = self.client.get(reverse("landing-page"))
         template_name = "notes/landing.html"
         self.assertTemplateUsed(response, template_name)
+
+    def test_get_list_of_notes_for_user(self):
+        self.client.login(username="fred", password="secret")
+        response = self.client.get(reverse("landing-page"))
+        object_list = response.context["object_list"]
+        self.assertQuerysetEqual(object_list, self.user.item_set.all())
+
+    def test_anonymous_visit(self):
+        response = self.client.get(reverse("landing-page"))
+        self.assertRedirects(response, reverse("login"))
 
 
 class UserRegisterViewTest(TestCase):
