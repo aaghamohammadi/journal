@@ -19,7 +19,7 @@ class LandingPageViewTest(TestCase):
         )
         Item.objects.create(
             title="LR implementation",
-            text="It is option to implement LR",
+            text="It is optional to implement LR",
             user=self.user2,
         )
 
@@ -56,7 +56,7 @@ class ItemPageViewTest(TestCase):
         )
         Item.objects.create(
             title="LR implementation",
-            text="It is option to implement LR",
+            text="It is optional to implement LR",
             user=self.user2,
         )
 
@@ -73,6 +73,39 @@ class ItemPageViewTest(TestCase):
         response = self.client.get(reverse("notes:item", kwargs={"pk": item.id}))
         response_context = response.context["item"]
         self.assertEqual(response_context, item)
+
+
+class ItemCreateViewTest(TestCase):
+    def setUp(self) -> None:
+        self.user1 = User.objects.create_user(username="fred", password="secret")
+        self.user2 = User.objects.create_user(username="john", password="smith")
+        Item.objects.create(
+            title="RF implementation",
+            text="I have to implement RF and find its hyperparameters",
+            user=self.user1,
+        )
+        Item.objects.create(
+            title="LR implementation",
+            text="It is optional to implement LR",
+            user=self.user2,
+        )
+
+    def test_anonymous_visit(self):
+        response = self.client.get(reverse("notes:create"))
+        self.assertRedirects(response, reverse("login"))
+
+    def test_user_create_item(self):
+        self.client.login(username="john", password="smith")
+        data = {
+            "title": "Meeting",
+            "text": "The meeting is held on Friday",
+        }
+
+        self.client.post(reverse("notes:create"), data)
+        is_created = Item.objects.filter(
+            user=self.user2, text=data["text"], title=data["title"]
+        ).exists()
+        self.assertTrue(is_created)
 
 
 class UserRegisterViewTest(TestCase):
