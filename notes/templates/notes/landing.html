@@ -1,5 +1,6 @@
 {% extends 'notes/base.html' %}
 {% block content %}
+<a href="{% url 'notes:create' %}">Add item</a>
 <table>
 {% for item in items %}
     <tr>
