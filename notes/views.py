@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import UserRegisterForm
@@ -42,3 +42,15 @@ class ItemPageView(LoginRequiredMixin, DetailView):
 
     def get_queryset(self):
         return Item.objects.filter(user=self.request.user)
+
+
+class ItemCreateView(LoginRequiredMixin, CreateView):
+    model = Item
+    fields = ["text", "title"]
+    template_name = "notes/create.html"
+    redirect_field_name = ""
+    success_url = reverse_lazy("notes:landing-page")
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(ItemCreateView, self).form_valid(form)
