@@ -2,40 +2,36 @@ from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 from django.shortcuts import reverse
 from django.test import TestCase
-from .models import Item
-from .forms import UserRegisterForm
+from notes.models import Item
+from notes.forms import UserRegisterForm
+from .factories.user import UserFactory
+from .factories.item import ItemFactory
 
 User = get_user_model()
+
+PASSWORD = "dkfjW#498,x"
 
 
 class LandingPageViewTest(TestCase):
     def setUp(self) -> None:
-        self.user1 = User.objects.create_user(username="fred", password="secret")
-        self.user2 = User.objects.create_user(username="john", password="smith")
-        Item.objects.create(
-            title="RF implementation",
-            text="I have to implement RF and find its hyperparameters",
-            user=self.user1,
-        )
-        Item.objects.create(
-            title="LR implementation",
-            text="It is optional to implement LR",
-            user=self.user2,
-        )
+        self.user1 = UserFactory(password=PASSWORD)
+        self.user2 = UserFactory(password=PASSWORD)
+        ItemFactory(user=self.user1)
+        ItemFactory(user=self.user2)
 
     def test_status_code(self):
-        self.client.login(username="fred", password="secret")
+        self.client.login(username=self.user1.username, password=PASSWORD)
         response = self.client.get(reverse("notes:landing-page"))
         self.assertEqual(response.status_code, 200)
 
     def test_template_name(self):
-        self.client.login(username="fred", password="secret")
+        self.client.login(username=self.user1.username, password=PASSWORD)
         response = self.client.get(reverse("notes:landing-page"))
         template_name = "notes/landing.html"
         self.assertTemplateUsed(response, template_name)
 
     def test_get_list_of_notes_for_user(self):
-        self.client.login(username="fred", password="secret")
+        self.client.login(username=self.user1.username, password=PASSWORD)
         response = self.client.get(reverse("notes:landing-page"))
         object_list = response.context["items"]
         self.assertQuerysetEqual(object_list, self.user1.item_set.all())
@@ -47,18 +43,10 @@ class LandingPageViewTest(TestCase):
 
 class ItemPageViewTest(TestCase):
     def setUp(self) -> None:
-        self.user1 = User.objects.create_user(username="fred", password="secret")
-        self.user2 = User.objects.create_user(username="john", password="smith")
-        Item.objects.create(
-            title="RF implementation",
-            text="I have to implement RF and find its hyperparameters",
-            user=self.user1,
-        )
-        Item.objects.create(
-            title="LR implementation",
-            text="It is optional to implement LR",
-            user=self.user2,
-        )
+        self.user1 = UserFactory(password=PASSWORD)
+        self.user2 = UserFactory(password=PASSWORD)
+        ItemFactory(user=self.user1)
+        ItemFactory(user=self.user2)
 
     def test_anonymous_visit(self):
         items = Item.objects.filter(user=self.user1)
@@ -67,7 +55,7 @@ class ItemPageViewTest(TestCase):
         self.assertRedirects(response, reverse("login"))
 
     def test_user_visit_item(self):
-        self.client.login(username="john", password="smith")
+        self.client.login(username=self.user2.username, password=PASSWORD)
         items = Item.objects.filter(user=self.user2)
         item = items.first()
         response = self.client.get(reverse("notes:item", kwargs={"pk": item.id}))
@@ -77,25 +65,17 @@ class ItemPageViewTest(TestCase):
 
 class ItemCreateViewTest(TestCase):
     def setUp(self) -> None:
-        self.user1 = User.objects.create_user(username="fred", password="secret")
-        self.user2 = User.objects.create_user(username="john", password="smith")
-        Item.objects.create(
-            title="RF implementation",
-            text="I have to implement RF and find its hyperparameters",
-            user=self.user1,
-        )
-        Item.objects.create(
-            title="LR implementation",
-            text="It is optional to implement LR",
-            user=self.user2,
-        )
+        self.user1 = UserFactory(password=PASSWORD)
+        self.user2 = UserFactory(password=PASSWORD)
+        ItemFactory(user=self.user1)
+        ItemFactory(user=self.user2)
 
     def test_anonymous_visit(self):
         response = self.client.get(reverse("notes:create"))
         self.assertRedirects(response, reverse("login"))
 
     def test_user_create_item(self):
-        self.client.login(username="john", password="smith")
+        self.client.login(username=self.user2.username, password=PASSWORD)
         data = {
             "title": "Meeting",
             "text": "The meeting is held on Friday",
