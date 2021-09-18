@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+from django.conf.global_settings import LOGIN_URL
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -128,3 +130,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = "notes.User"
 
 LOGIN_REDIRECT_URL = "/notes/items/"
+LOGOUT_REDIRECT_URL = LOGIN_URL
