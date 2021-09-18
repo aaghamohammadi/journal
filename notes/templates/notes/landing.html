@@ -6,6 +6,8 @@
     <tr>
         <td>{{ item.title }}</td>
         <td><a href="{% url 'notes:item' item.id %}">View</a></td>
+        <td><a href="{% url 'notes:edit' item.id %}">Edit</a></td>
+        <td><a href="{% url 'notes:delete' item.id %}">Delete</a></td>
     </tr>
 {% endfor %}
 </table>
