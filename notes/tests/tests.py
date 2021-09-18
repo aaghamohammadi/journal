@@ -88,6 +88,67 @@ class ItemCreateViewTest(TestCase):
         self.assertTrue(is_created)
 
 
+class ItemUpdateViewTest(TestCase):
+    def setUp(self) -> None:
+        self.user1 = UserFactory(password=PASSWORD)
+        self.user2 = UserFactory(password=PASSWORD)
+        ItemFactory(user=self.user1)
+        ItemFactory(user=self.user2)
+
+    def test_anonymous_visit(self):
+        items = Item.objects.filter(user=self.user1)
+        item = items.first()
+        response = self.client.get(reverse("notes:edit", kwargs={"pk": item.id}))
+        self.assertRedirects(response, reverse("login"))
+
+    def test_user_update_item_title(self):
+        self.client.login(username=self.user2.username, password=PASSWORD)
+        items = Item.objects.filter(user=self.user2)
+        item = items.first()
+        data = {"title": "UpdatedTitle", "text": item.text}
+        self.client.post(reverse("notes:edit", kwargs={"pk": item.id}), data)
+        is_updated = Item.objects.filter(
+            user=self.user2, text=item.text, title=data["title"]
+        ).exists()
+        self.assertTrue(is_updated)
+
+    def test_user_update_item_text(self):
+        self.client.login(username=self.user2.username, password=PASSWORD)
+        items = Item.objects.filter(user=self.user2)
+        item = items.first()
+        data = {"title": item.title, "text": "UpdatedText"}
+        self.client.post(reverse("notes:edit", kwargs={"pk": item.id}), data)
+        is_updated = Item.objects.filter(
+            user=self.user2, text=data["text"], title=item.title
+        ).exists()
+        self.assertTrue(is_updated)
+
+
+class ItemDeleteView(TestCase):
+    def setUp(self) -> None:
+        self.user1 = UserFactory(password=PASSWORD)
+        self.user2 = UserFactory(password=PASSWORD)
+        ItemFactory(user=self.user1)
+        ItemFactory(user=self.user2)
+
+    def test_anonymous_visit(self):
+        items = Item.objects.filter(user=self.user1)
+        item = items.first()
+        response = self.client.get(reverse("notes:delete", kwargs={"pk": item.id}))
+        self.assertRedirects(response, reverse("login"))
+
+    def test_delete_item(self):
+        self.client.login(username=self.user2.username, password=PASSWORD)
+        items = Item.objects.filter(user=self.user2)
+        item = items.first()
+        self.client.post(reverse("notes:delete", kwargs={"pk": item.id}))
+        is_existed = Item.objects.filter(
+            user=self.user2, text=item.text, title=item.title
+        ).exists()
+
+        self.assertFalse(is_existed)
+
+
 class UserRegisterViewTest(TestCase):
     def test_status_code(self):
         response = self.client.get(reverse("notes:register"))
