@@ -17,7 +17,7 @@ class LandingPageViewTest(TestCase):
         self.user1 = UserFactory(password=PASSWORD)
         self.user2 = UserFactory(password=PASSWORD)
         ItemFactory(user=self.user1)
-        ItemFactory(user=self.user2)
+        ItemFactory(user=self.user1)
 
     def test_status_code(self):
         self.client.login(username=self.user1.username, password=PASSWORD)
@@ -34,11 +34,23 @@ class LandingPageViewTest(TestCase):
         self.client.login(username=self.user1.username, password=PASSWORD)
         response = self.client.get(reverse("notes:landing-page"))
         object_list = response.context["items"]
-        self.assertQuerysetEqual(object_list, self.user1.item_set.all())
+        self.assertQuerysetEqual(object_list, self.user1.item_set.all(), ordered=False)
 
     def test_anonymous_visit(self):
         response = self.client.get(reverse("notes:landing-page"))
         self.assertRedirects(response, reverse("login"))
+
+    def test_search(self):
+        self.client.login(username=self.user1.username, password=PASSWORD)
+        first_item = self.user1.item_set.all().first()
+        data = {"search-area": first_item.title}
+        response = self.client.get(reverse("notes:landing-page"), data=data)
+        object_list = response.context["items"]
+        self.assertQuerysetEqual(
+            object_list,
+            self.user1.item_set.filter(title=first_item.title),
+            ordered=False,
+        )
 
 
 class ItemPageViewTest(TestCase):
