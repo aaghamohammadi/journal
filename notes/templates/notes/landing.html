@@ -1,6 +1,11 @@
 {% extends 'notes/base.html' %}
 {% block content %}
 <a href="{% url 'notes:create' %}">Add item</a>
+
+<form method="GET">
+    <input type="text" name="search-area" value="{{ search_input }}">
+    <input type="submit" value="Search">
+</form>
 <table>
 {% for item in items %}
     <tr>

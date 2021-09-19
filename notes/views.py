@@ -34,6 +34,14 @@ class LandingPageView(LoginRequiredMixin, ListView):
         user = self.request.user
         return Item.objects.filter(user=user)
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        search_input = self.request.GET.get("search-area") or ""
+        if search_input:
+            context["items"] = context["items"].filter(title__icontains=search_input)
+            context["search_input"] = search_input
+        return context
+
 
 class ItemPageView(LoginRequiredMixin, DetailView):
     template_name = "notes/item.html"
