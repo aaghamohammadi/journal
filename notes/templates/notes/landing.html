@@ -1,19 +1,22 @@
 {% extends 'notes/base.html' %}
-{% block content %}
-<a href="{% url 'notes:create' %}">Add item</a>
+
+{% block header %}
+<a href="{% url 'notes:create' %}" class="nav-link me-auto text-white">Add item</a>
 
 <form method="GET">
-    <input type="text" name="search-area" value="{{ search_input }}">
-    <input type="submit" value="Search">
+    <input type="text" name="search-area" value="{{ search_input }}" placeholder="Search" class="form-control">
 </form>
+{% endblock header %}
+
+{% block content %}
 <table>
-{% for item in items %}
+    {% for item in items %}
     <tr>
         <td>{{ item.title }}</td>
         <td><a href="{% url 'notes:item' item.id %}">View</a></td>
         <td><a href="{% url 'notes:edit' item.id %}">Edit</a></td>
         <td><a href="{% url 'notes:delete' item.id %}">Delete</a></td>
     </tr>
-{% endfor %}
+    {% endfor %}
 </table>
 {% endblock content%}

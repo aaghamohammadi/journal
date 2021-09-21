@@ -1,9 +1,11 @@
 {% extends 'notes/base.html' %}
+{% block header %}
+<a href="{% url 'notes:register' %}" class="nav-link me-auto text-white">Register</a>
+{% endblock header %}
 {% block content %}
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="login">
 </form>
-<p>Do not you have an account? <a href="{% url 'notes:register' %}">Register</a></p>
 {% endblock content%}

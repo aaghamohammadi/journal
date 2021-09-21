@@ -1,4 +1,7 @@
 {% extends 'notes/base.html' %}
+{% block header %}
+<a href="{% url 'login' %}" class="nav-link me-auto text-white">Login</a>
+{% endblock header %}
 {% block content %}
 <form method="post">
     {% csrf_token %}
