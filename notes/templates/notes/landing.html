@@ -13,9 +13,9 @@
     {% for item in items %}
     <tr>
         <td>{{ item.title }}</td>
-        <td><a href="{% url 'notes:item' item.id %}">View</a></td>
-        <td><a href="{% url 'notes:edit' item.id %}">Edit</a></td>
-        <td><a href="{% url 'notes:delete' item.id %}">Delete</a></td>
+        <td><a href="{% url 'notes:item' item.id %}" class="nav-link me-auto">View</a></td>
+        <td><a href="{% url 'notes:edit' item.id %}" class="nav-link me-auto">Edit</a></td>
+        <td><a href="{% url 'notes:delete' item.id %}" class="nav-link me-auto">Delete</a></td>
     </tr>
     {% endfor %}
 </table>

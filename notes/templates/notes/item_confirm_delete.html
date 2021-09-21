@@ -3,6 +3,6 @@
 <form method="POST">
     {% csrf_token %}
     <p>Would you like to delete <b>{{ item }}</b>?</p>
-    <input type="submit" value="Delete">
+    <input type="submit" value="Delete" class="btn btn-success">
 </form>
 {% endblock content%}
