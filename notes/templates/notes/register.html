@@ -2,7 +2,9 @@
 {% load crispy_forms_tags %}
 
 {% block header %}
+{% if not request.user.is_authenticated %}
 <a href="{% url 'login' %}" class="nav-link me-auto text-white">Login</a>
+{% endif %}
 {% endblock header %}
 {% block content %}
 <form method="post" class="form-group">
