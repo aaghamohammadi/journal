@@ -1,9 +1,11 @@
 {% extends 'notes/base.html' %}
 {% block content %}
-<table>
-    <tr>
-        <td>{{ item.title }}</td>
-        <td>{{ item.text }}</td>
-    </tr>
-</table>
+<div class="blog-main">
+    <div class="blog-post">
+        <h2 class="block-post-title">{{ item.title }}</h2>
+        <hr>
+        <p>{{ item.text }}</p>
+    </div>
+
+</div>
 {% endblock content%}
