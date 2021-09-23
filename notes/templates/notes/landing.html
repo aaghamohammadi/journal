@@ -1,10 +1,10 @@
 {% extends 'notes/base.html' %}
 
 {% block header %}
-<a href="{% url 'notes:create' %}" class="nav-link me-auto text-white">Add item</a>
+<a href="{% url 'notes:create' %}" class="nav-link me-auto text-white">اضافه کردن یاد‌داشت</a>
 
 <form method="GET">
-    <input type="text" name="search-area" value="{{ search_input }}" placeholder="Search" class="form-control">
+    <input type="text" name="search-area" value="{{ search_input }}" placeholder="جست‌وجو" class="form-control">
 </form>
 {% endblock header %}
 
@@ -13,9 +13,9 @@
     {% for item in items %}
     <tr>
         <td>{{ item.title }}</td>
-        <td><a href="{% url 'notes:item' item.id %}" class="nav-link me-auto">View</a></td>
-        <td><a href="{% url 'notes:edit' item.id %}" class="nav-link me-auto">Edit</a></td>
-        <td><a href="{% url 'notes:delete' item.id %}" class="nav-link me-auto">Delete</a></td>
+        <td><a href="{% url 'notes:item' item.id %}" class="nav-link me-auto">دیدن</a></td>
+        <td><a href="{% url 'notes:edit' item.id %}" class="nav-link me-auto">ویرایش</a></td>
+        <td><a href="{% url 'notes:delete' item.id %}" class="nav-link me-auto">حذف</a></td>
     </tr>
     {% endfor %}
 </table>

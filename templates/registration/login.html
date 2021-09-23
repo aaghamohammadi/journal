@@ -2,12 +2,12 @@
 {% load crispy_forms_tags %}
 
 {% block header %}
-<a href="{% url 'notes:register' %}" class="nav-link me-auto text-white">Register</a>
+<a href="{% url 'notes:register' %}" class="nav-link me-auto text-white">ثبت‌نام</a>
 {% endblock header %}
 {% block content %}
 <form method="post" class="form-group">
     {% csrf_token %}
     {{ form | crispy }}
-    <input type="submit" value="login" class="btn btn-success">
+    <input type="submit" value="ورود" class="btn btn-success">
 </form>
 {% endblock content%}

@@ -3,13 +3,13 @@
 
 {% block header %}
 {% if not request.user.is_authenticated %}
-<a href="{% url 'login' %}" class="nav-link me-auto text-white">Login</a>
+<a href="{% url 'login' %}" class="nav-link me-auto text-white">ورود</a>
 {% endif %}
 {% endblock header %}
 {% block content %}
 <form method="post" class="form-group">
     {% csrf_token %}
     {{ form | crispy }}
-    <input type="submit" value="signup" class="btn btn-success">
+    <input type="submit" value="ثبت‌نام" class="btn btn-success">
 </form>
 {% endblock content%}

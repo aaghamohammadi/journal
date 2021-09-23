@@ -7,8 +7,8 @@ class User(AbstractUser):
 
 
 class Item(models.Model):
-    title = models.CharField(max_length=50)
-    text = models.TextField()
+    title = models.CharField(max_length=50, verbose_name="عنوان")
+    text = models.TextField(verbose_name="متن")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):

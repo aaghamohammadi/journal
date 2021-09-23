@@ -2,7 +2,8 @@
 {% block content %}
 <form method="POST">
     {% csrf_token %}
-    <p>Would you like to delete <b>{{ item }}</b>?</p>
-    <input type="submit" value="Delete" class="btn btn-success">
+    <p>آیا از حذف <b>{{ item }}</b>
+        مطمئن هستید؟</p>
+    <input type="submit" value="حذف" class="btn btn-success">
 </form>
 {% endblock content%}
